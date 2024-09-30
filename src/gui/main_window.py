@@ -497,7 +497,7 @@ class MainWindow:
         self.write_modifications()
 
         for appId in self.modifiedApps:
-            logger.debug("Updating modified app {appId}")
+            logger.debug(f"Updating modified app {appId}")
             self.appinfo.update_app(appId)
 
         logger.info("Writing data to appinfo.vdf")
