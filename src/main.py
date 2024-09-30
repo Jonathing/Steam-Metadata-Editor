@@ -29,13 +29,20 @@ from config import config
 from gui.main_window import MainWindow
 from appinfo import IncompatibleVDFError
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def main():
+    # Setup logging
+    logging.basicConfig(level=logging.DEBUG)
+
     try:
         main_window = MainWindow()
         if not config.silent and config.export is None:
             main_window.window.mainloop()
     except IncompatibleVDFError as e:
+        logger.exception("appinfo.vdf is using an incompatible VDF format!")
         messagebox.showerror(
             title="Invalid VDF Version",
             message=f"VDF version {e.vdf_version:#08x} is not supported.",

@@ -39,6 +39,9 @@ from gui.widgets import (
     ScrollableFrame,
 )
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class MainWindow:
     def __init__(self):
@@ -50,6 +53,8 @@ class MainWindow:
         )
 
         if export is not None:
+            logger.info("Exporting modified apps to config")
+
             self.modifiedApps.extend(export)
             self.load_modifications()
             self.appinfo = Appinfo(self.vdf_path)
@@ -60,6 +65,8 @@ class MainWindow:
             self.write_modifications()
 
         if silent:
+            logger.info("Silently patching appinfo.vdf with existing modifications")
+
             self.load_modifications()
             self.appinfo = Appinfo(self.vdf_path)
 
@@ -79,6 +86,8 @@ class MainWindow:
                 ]["modified"]
 
     def create_main_window(self):
+        logger.info("Creating main window")
+
         # Define main window
         self.window = tk.Tk()
         self.window.title("Steam Metadata Editor")
@@ -362,8 +371,10 @@ class MainWindow:
                 ] = install_path
 
     def write_modifications(self):
+        logger.info(f"Writing modifications to {config.CONFIG_PATH}/modifications.json")
         with open(f"{config.CONFIG_PATH}/modifications.json", "w") as mod:
             for app in self.modifiedApps:
+                logger.debug(f"Saving modified app {str(app)}")
                 self.jsonData[str(app)][
                     "modified"
                 ] = self.appinfo.parsedAppInfo[app]["sections"]
@@ -375,14 +386,17 @@ class MainWindow:
         self.jsonData[str(appID)]["original"] = appData
 
     def load_modifications(self):
+        logger.info(f"Loading existing modifications from {config.CONFIG_PATH}/modifications.json")
         try:
             with open(f"{config.CONFIG_PATH}/modifications.json", "r") as mod:
                 self.jsonData = json.load(mod)
                 for app in self.jsonData:
                     app = int(app)
                     if app not in self.modifiedApps:
+                        logger.debug(f"Loading app {str(app)} from config")
                         self.modifiedApps.append(app)
         except (FileNotFoundError, JSONDecodeError):
+            logger.exception(f"Failed to load mofications from {config.CONFIG_PATH}/modifications.json")
             self.jsonData = {}
 
     def get_data_from_section(self, appID, *sections, error=""):
@@ -479,8 +493,10 @@ class MainWindow:
         self.write_modifications()
 
         for appId in self.modifiedApps:
+            logger.debug(f"Updating modified app {appId}")
             self.appinfo.update_app(appId)
 
+        logger.info("Writing data to appinfo.vdf")
         self.appinfo.write_data()
 
         if notice:
