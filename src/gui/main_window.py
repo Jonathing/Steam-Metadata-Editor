@@ -52,9 +52,7 @@ class MainWindow:
         if export is not None:
             self.modifiedApps.extend(export)
             self.load_modifications()
-            self.appinfo = Appinfo(
-                self.vdf_path, True, apps=self.modifiedApps
-            )
+            self.appinfo = Appinfo(self.vdf_path)
 
             for app in self.modifiedApps:
                 self.save_original_data(app)
@@ -63,9 +61,7 @@ class MainWindow:
 
         if silent:
             self.load_modifications()
-            self.appinfo = Appinfo(
-                self.vdf_path, True, apps=self.modifiedApps
-            )
+            self.appinfo = Appinfo(self.vdf_path)
 
             for app in self.modifiedApps:
                 self.appinfo.parsedAppInfo[app]["sections"] = self.jsonData[
