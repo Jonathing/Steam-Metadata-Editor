@@ -35,8 +35,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     # Setup logging
-    logging.basicConfig(filename="Steam-Metadata-Editor.log", level=logging.INFO)
-    logging.basicConfig(filename="Steam-Metadata-Editor.debug.log", level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
 
     try:
         main_window = MainWindow()

@@ -397,7 +397,7 @@ class MainWindow:
                 for app in self.jsonData:
                     app = int(app)
                     if app not in self.modifiedApps:
-                        logger.debug(f"Loading modified app {str(app)}")
+                        logger.debug(f"Loading app {str(app)} from config")
                         self.modifiedApps.append(app)
         except (FileNotFoundError, JSONDecodeError):
             logger.exception(f"Failed to load mofications from {config.CONFIG_PATH}/modifications.json")
